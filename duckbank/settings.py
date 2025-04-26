@@ -138,7 +138,7 @@ AUTH_USER_MODEL = 'loans.CustomUser'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://duckbank.vercel.app",
-    "https://web-production-b8a3.up.railway.app/"
+    "https://web-production-b8a3.up.railway.app"
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
