@@ -27,7 +27,9 @@ SECRET_KEY = 'django-insecure-c-mxt$qgqo^l%0a!kj!9_yk31j3^w0yz^p5@l54@_q@t%xuvzv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'False'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,web-production-b8a3.up.railway.app,duckbank.vercel.app').split(',')
+
+
 
 
 # Application definition
@@ -138,6 +140,7 @@ AUTH_USER_MODEL = 'loans.CustomUser'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://duckbank.vercel.app",
+    "https://web-production-b8a3.up.railway.app/"
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
