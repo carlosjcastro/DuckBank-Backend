@@ -331,44 +331,46 @@ class ConsultarCuentaView(APIView):
         }, status=status.HTTP_200_OK)
 
 # Esto permite mostrar la información completa del usuario
-class UpdateUserProfileView(APIView):
-    parser_classes = [MultiPartParser, FormParser]
+class GetFullUserDetailsView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def put(self, request, *args, **kwargs):
+    def get(self, request):
         user = request.user
-        first_name = request.data.get('first_name')
-        last_name = request.data.get('last_name')
-        email = request.data.get('email')
-        dni = request.data.get('dni')
-        profile_image = request.data.get('profile_image')
 
-        user_profile, created = UserProfile.objects.get_or_create(user=user)
+        try:
+            user_profile = user.userprofile
 
-        # Actualizar datos del CustomUser
-        if first_name:
-            user.first_name = first_name
-        if last_name:
-            user.last_name = last_name
-        if email:
-            user.email = email
-        user.save()
+            sucursal = user.sucursal
 
-        # Actualizar datos del UserProfile
-        if dni:
-            user_profile.dni = dni
-        if profile_image:
-            user_profile.profile_image = profile_image
+            sucursal_nombre = sucursal.nombre if sucursal else 'No asignada'
 
-        user_profile.save()
+            user_data = {
+                'username': user.username,
+                'email': user_profile.email or 'No registrado',
+                'first_name': user_profile.first_name or 'N/A',
+                'last_name': user_profile.last_name or 'N/A',
+                'dni': user_profile.dni or 'N/A',
+                'address': user.address or 'Sin dirección',
+                'balance': user.balance or 0,
+                'sucursal': sucursal_nombre,
+                'alias': user.alias or 'Sin alias',
+                'cbu': user.cbu or 'Sin CBU',
+                'profile_image': user_profile.profile_image.url if user_profile.profile_image else None,
+            }
 
-        return Response({
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email,
-            'dni': user_profile.dni,
-            'profile_image': user_profile.profile_image.url if user_profile.profile_image else None
-        })
+            return Response(user_data, status=status.HTTP_200_OK)
+
+        except UserProfile.DoesNotExist:
+            return Response(
+                {'detail': 'Perfil del usuario no encontrado.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        except Exception as e:
+            return Response(
+                {'detail': f'Error inesperado: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 # Esto permite transferir dinero a otro usuario registrado y descontar el monto de la cuenta del usuario que realiza la transferencia
 class TransferirAPIView(APIView):
