@@ -166,7 +166,7 @@ class EliminarPrestamoView(APIView):
         prestamo.delete()
         return Response({"detail": "Préstamo eliminado correctamente."}, status=status.HTTP_204_NO_CONTENT)
 
-# Esto permite mostrar un listado de tarjetas de débito del usuario
+# Esto permite mostrar un listado de tarjetas de débito del usuario.
 class ListDebitCardsView(APIView):
     permission_classes = [IsAuthenticated]
 
