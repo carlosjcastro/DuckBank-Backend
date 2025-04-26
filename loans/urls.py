@@ -14,7 +14,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
-    path('api/validate-token/', ValidateTokenView.as_view(), name='validate-token'),
+    path('validate-token/', ValidateTokenView.as_view(), name='validate-token'),
     path('solicitar-prestamo/', SolicitarPrestamoView.as_view(), name='solicitar-prestamo'),
     path('mis-prestamos/', ObtenerPrestamosView.as_view(), name='obtener-prestamos'),
     path('eliminar-prestamo/<int:pk>/', EliminarPrestamoView.as_view(), name='eliminar-prestamo'),
