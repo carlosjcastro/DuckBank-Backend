@@ -30,8 +30,6 @@ DEBUG = os.getenv('DEBUG', 'False') == 'False'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,web-production-b8a3.up.railway.app,duckbank.vercel.app').split(',')
 
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
