@@ -76,20 +76,15 @@ class RegisterView(APIView):
 
             with transaction.atomic():
                 user = CustomUser.objects.create_user(username=username, password=password, dni=dni)
+                # 🚨 Si esta línea falla, se revierte todo automáticamente
+                UserProfile.objects.create(user=user)
 
-                try:
-                    UserProfile.objects.create(user=user)
-                except Exception as e:
-                    logger.error(f"Error al crear UserProfile para {username}: {str(e)}")
-                    user.delete()  # 🚨 Si falla, eliminamos el usuario que habíamos creado
-                    raise IntegrityError("Fallo la creación del perfil.")
-
-                logger.info(f"Usuario {username} y perfil creados exitosamente.")
-                return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
+            logger.info(f"Usuario {username} y perfil creados exitosamente.")
+            return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
 
         except IntegrityError as e:
-            logger.error(f"Error de integridad al crear el usuario {username}: {str(e)}")
-            return Response({"detail": "Error de integridad al crear el usuario. Verifique los datos."}, status=status.HTTP_400_BAD_REQUEST)
+            logger.error(f"Error de integridad al registrar usuario {username}: {str(e)}")
+            return Response({"detail": "Error de integridad al registrar usuario. Verifique los datos."}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             logger.error(f"Error interno al registrar usuario {username}: {str(e)}")
