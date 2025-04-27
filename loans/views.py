@@ -63,29 +63,37 @@ class RegisterView(APIView):
 
         logger.info(f"Intentando registrar usuario: {username}, DNI: {dni}")
 
-        if CustomUser.objects.filter(username=username).exists():
-            logger.warning(f"El nombre de usuario {username} ya está en uso.")
-            return Response({"detail": "El nombre de usuario ya está en uso."}, status=status.HTTP_400_BAD_REQUEST)
-
         try:
-            # Crear el usuario
-            user = CustomUser.objects.create_user(username=username, password=password)
-            user.dni = dni
-            user.save()
+            # Asegurarse de que no exista un usuario con el mismo nombre de usuario
+            if CustomUser.objects.filter(username=username).exists():
+                logger.warning(f"El nombre de usuario {username} ya está en uso.")
+                return Response({"detail": "El nombre de usuario ya está en uso."}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Verificar si el perfil ya existe antes de crearlo
-            if not UserProfile.objects.filter(user=user).exists():
-                UserProfile.objects.create(user=user)
+            with transaction.atomic():  # Iniciar una transacción atómica
+                # Crear el usuario
+                user = CustomUser.objects.create_user(username=username, password=password)
+                user.dni = dni
+                user.save()
 
+                # Crear el perfil solo si no existe uno para ese usuario
+                if not UserProfile.objects.filter(user=user).exists():
+                    profile = UserProfile.objects.create(user=user)
+                    logger.info(f"Perfil creado para el usuario {username}.")
+                else:
+                    logger.info(f"El perfil para el usuario {username} ya existe.")
+
+            # Si todo ha ido bien, retornar respuesta de éxito
             logger.info(f"Usuario {username} creado exitosamente.")
             return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
 
         except IntegrityError as e:
             logger.error(f"Error de integridad al crear el usuario {username}: {str(e)}")
+            transaction.rollback()  # Asegurarse de que se revierta la transacción
             return Response({"detail": "Error de integridad al crear el usuario."}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             logger.error(f"Error al crear el usuario {username}: {str(e)}")
+            transaction.rollback()  # Revertir en caso de otros errores
             return Response({"detail": "Error al crear el usuario."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     
