@@ -64,7 +64,7 @@ class RegisterView(APIView):
         logger.info(f"Intentando registrar usuario: {username}, DNI: {dni}")
 
         try:
-            # Asegurarse de que no exista un usuario con el mismo nombre de usuario
+            # Verificar si ya existe un usuario con ese nombre de usuario
             if CustomUser.objects.filter(username=username).exists():
                 logger.warning(f"El nombre de usuario {username} ya está en uso.")
                 return Response({"detail": "El nombre de usuario ya está en uso."}, status=status.HTTP_400_BAD_REQUEST)
@@ -75,14 +75,14 @@ class RegisterView(APIView):
                 user.dni = dni
                 user.save()
 
-                # Crear el perfil solo si no existe uno para ese usuario
+                # Verificar si ya existe un perfil para este usuario
                 if not UserProfile.objects.filter(user=user).exists():
                     profile = UserProfile.objects.create(user=user)
                     logger.info(f"Perfil creado para el usuario {username}.")
                 else:
                     logger.info(f"El perfil para el usuario {username} ya existe.")
 
-            # Si todo ha ido bien, retornar respuesta de éxito
+            # Retornar respuesta de éxito
             logger.info(f"Usuario {username} creado exitosamente.")
             return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
 

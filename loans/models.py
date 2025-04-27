@@ -78,7 +78,7 @@ class DebitCard(models.Model):
         return f"{self.tipo} - {self.numero}"
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255, default="")
     email = models.EmailField()
@@ -87,13 +87,6 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
-
-    @classmethod
-    def create_profile(cls, user):
-        """Método para crear el perfil solo si no existe"""
-        if not cls.objects.filter(user=user).exists():
-            return cls.objects.create(user=user)
-        return None
 
 class Transfer(models.Model):
     sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="sent_transfers")
