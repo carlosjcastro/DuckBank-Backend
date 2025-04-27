@@ -101,8 +101,7 @@ class RegisterView(APIView):
         except Exception as e:
             logger.error(f"Error al crear el usuario {username}: {str(e)}")
             transaction.rollback()  # Revertir en caso de otros errores
-            return Response({"detail": "Error al crear el usuario. Intente nuevamente."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+            return Response({"detail": "Error al crear el usuario. Intente nuevamente."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
     
     # Esto permite validar el token en el Frontend
 class ValidateTokenView(APIView):
