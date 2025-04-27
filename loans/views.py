@@ -16,7 +16,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from django.views.decorators.csrf import csrf_exempt
 import jwt
 from django.conf import settings
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -64,23 +64,35 @@ class RegisterView(APIView):
         # Log para ver que se están recibiendo los datos correctamente
         logger.info(f"Intentando registrar usuario: {username}, DNI: {dni}")
 
+        # Verificar si el nombre de usuario ya está en uso
         if CustomUser.objects.filter(username=username).exists():
             logger.warning(f"El nombre de usuario {username} ya está en uso.")
             return Response({"detail": "El nombre de usuario ya está en uso."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
+            # Crear el usuario
             user = CustomUser.objects.create_user(username=username, password=password)
             user.dni = dni
             user.save()
 
-            UserProfile.objects.get_or_create(user=user)
+            # Verificar si el perfil ya existe para este usuario
+            if UserProfile.objects.filter(user=user).exists():
+                logger.warning(f"El perfil para el usuario {username} ya existe.")
+            else:
+                # Crear el perfil del usuario si no existe
+                UserProfile.objects.create(user=user)
+                logger.info(f"Perfil del usuario {username} creado exitosamente.")
 
             # Log de éxito
             logger.info(f"Usuario {username} creado exitosamente.")
             return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
+        except IntegrityError as e:
+            # Manejo de excepciones específicas de la base de datos
+            logger.error(f"Error de integridad al crear el usuario {username}: {str(e)}")
+            return Response({"detail": f"Error al crear el usuario: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            # Log de error
-            logger.error(f"Error al crear el usuario {username}: {str(e)}")
+            # Log de error general
+            logger.error(f"Error inesperado al crear el usuario {username}: {str(e)}")
             return Response({"detail": "Error al crear el usuario."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     
