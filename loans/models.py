@@ -88,6 +88,13 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+    @classmethod
+    def create_profile(cls, user):
+        """Método para crear el perfil solo si no existe"""
+        if not cls.objects.filter(user=user).exists():
+            return cls.objects.create(user=user)
+        return None
+
 class Transfer(models.Model):
     sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="sent_transfers")
     receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="received_transfers")
