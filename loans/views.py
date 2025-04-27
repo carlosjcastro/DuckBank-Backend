@@ -75,13 +75,13 @@ class RegisterView(APIView):
             user.dni = dni
             user.save()
 
-            # Verificar si el perfil ya existe para este usuario
-            if UserProfile.objects.filter(user=user).exists():
-                logger.warning(f"El perfil para el usuario {username} ya existe.")
-            else:
-                # Crear el perfil del usuario si no existe
+            # Verificar si ya existe un perfil para este usuario
+            if not UserProfile.objects.filter(user=user).exists():
+                # Crear el perfil solo si no existe
                 UserProfile.objects.create(user=user)
                 logger.info(f"Perfil del usuario {username} creado exitosamente.")
+            else:
+                logger.warning(f"El perfil del usuario {username} ya existe.")
 
             # Log de éxito
             logger.info(f"Usuario {username} creado exitosamente.")
