@@ -55,13 +55,13 @@ class LoginView(APIView):
             }, status=status.HTTP_200_OK)
         return Response({"detail": "Credenciales inválidas."}, status=status.HTTP_401_UNAUTHORIZED)
 
-# Esto permite registrar un usuario en el Frontend y Backend
 class RegisterView(APIView):
     def post(self, request):
         username = request.data.get("usuario")
         password = request.data.get("password")
         dni = request.data.get("dni")
 
+        # Log para ver que se están recibiendo los datos correctamente
         logger.info(f"Intentando registrar usuario: {username}, DNI: {dni}")
 
         if CustomUser.objects.filter(username=username).exists():
@@ -75,11 +75,14 @@ class RegisterView(APIView):
 
             UserProfile.objects.get_or_create(user=user)
 
+            # Log de éxito
             logger.info(f"Usuario {username} creado exitosamente.")
             return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
         except Exception as e:
+            # Log de error
             logger.error(f"Error al crear el usuario {username}: {str(e)}")
             return Response({"detail": "Error al crear el usuario."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
     
     # Esto permite validar el token en el Frontend
 class ValidateTokenView(APIView):
