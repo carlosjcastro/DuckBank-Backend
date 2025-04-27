@@ -22,6 +22,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import CustomUser
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+import logging
+logger = logging.getLogger(__name__)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -59,16 +62,24 @@ class RegisterView(APIView):
         password = request.data.get("password")
         dni = request.data.get("dni")
 
+        logger.info(f"Intentando registrar usuario: {username}, DNI: {dni}")
+
         if CustomUser.objects.filter(username=username).exists():
+            logger.warning(f"El nombre de usuario {username} ya está en uso.")
             return Response({"detail": "El nombre de usuario ya está en uso."}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = CustomUser.objects.create_user(username=username, password=password)
-        user.dni = dni
-        user.save()
+        try:
+            user = CustomUser.objects.create_user(username=username, password=password)
+            user.dni = dni
+            user.save()
 
-        UserProfile.objects.get_or_create(user=user)
+            UserProfile.objects.get_or_create(user=user)
 
-        return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
+            logger.info(f"Usuario {username} creado exitosamente.")
+            return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            logger.error(f"Error al crear el usuario {username}: {str(e)}")
+            return Response({"detail": "Error al crear el usuario."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     # Esto permite validar el token en el Frontend
 class ValidateTokenView(APIView):
