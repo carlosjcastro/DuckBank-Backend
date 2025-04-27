@@ -35,13 +35,15 @@ class CustomUser(AbstractUser):
         return f"{random.randint(1000000000000000000000, 9999999999999999999999)}"
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        UserProfile.objects.get_or_create(user=self)
+    # Generar alias y cbu solo si no existen
         if not self.alias:
             self.alias = self.generate_alias()
         if not self.cbu:
             self.cbu = self.generate_cbu()
+        # Guardar el objeto solo una vez
         super().save(*args, **kwargs)
+        # Crear el perfil del usuario
+        UserProfile.objects.get_or_create(user=self)
 
     def __str__(self):
         return self.username

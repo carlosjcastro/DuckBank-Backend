@@ -1,3 +1,4 @@
+# signals.py
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.timezone import now
@@ -6,7 +7,6 @@ from datetime import timedelta
 import random
 from .models import DebitCard, CustomUser, UserProfile
 
-# Esto permite que cada vez que se cree un usuario, se cree una tarjeta de débito
 @receiver(post_save, sender=CustomUser)
 def crear_tarjeta_debito(sender, instance, created, **kwargs):
     if created:
@@ -21,21 +21,19 @@ def crear_tarjeta_debito(sender, instance, created, **kwargs):
             fecha_vencimiento=fecha_vencimiento,
         )
 
-# Esto permite que cada vez que se cree un usuario, se cree un perfil de usuario
 @receiver(post_save, sender=CustomUser)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        # Solo crear el perfil si no existe
+        # Crear perfil si no existe
         if not UserProfile.objects.filter(user=instance).exists():
             user_profile = UserProfile.objects.create(user=instance)
-            # Asignar alias y CBU si no existen
+            # Asignar alias y cbu
             if not user_profile.alias:
-                user_profile.alias = user_profile.generate_alias()  # Método para generar el alias
+                user_profile.alias = user_profile.generate_alias()
             if not user_profile.cbu:
-                user_profile.cbu = user_profile.generate_cbu()  # Método para generar el CBU
+                user_profile.cbu = user_profile.generate_cbu()
             user_profile.save()
 
-# Esto permite que cada vez que se cree un usuario, se le asigne un saldo aleatorio entre 40,000 y 500,000
 @receiver(post_save, sender=CustomUser)
 def assign_random_balance(sender, instance, created, **kwargs):
     if created:
