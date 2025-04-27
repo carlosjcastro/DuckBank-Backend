@@ -25,7 +25,9 @@ def crear_tarjeta_debito(sender, instance, created, **kwargs):
 @receiver(post_save, sender=CustomUser)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance)
+        # Solo crear el perfil si no existe
+        if not hasattr(instance, 'userprofile'):
+            UserProfile.objects.create(user=instance)
 
 # Esto permite que cada vez que se cree un usuario, se le asigne un saldo aleatorio entre 40,000 y 500,000
 @receiver(post_save, sender=CustomUser)
@@ -34,14 +36,3 @@ def assign_random_balance(sender, instance, created, **kwargs):
         random_balance = random.uniform(40000, 500000)
         instance.balance = round(random_balance, 2)
         instance.save()
-
-
-# @receiver(post_save, sender=CustomUser)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     if created:
-#         user_profile = UserProfile.objects.create(user=instance)
-#         default_image_path = os.path.join(settings.BASE_DIR, 'media', 'profile_images', 'duck_profile.jpeg')
-#         if os.path.exists(default_image_path):
-#             with open(default_image_path, 'rb') as img_file:
-#                 user_profile.profile_image.save('duck_profile.jpeg', File(img_file))
-#             user_profile.save()
