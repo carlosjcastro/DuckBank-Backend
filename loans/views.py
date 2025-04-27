@@ -1,3 +1,4 @@
+from pydantic import ValidationError
 from rest_framework import viewsets, permissions, generics
 from .models import CustomUser, Loan, DebitCard, Sucursal, UserProfile, Transfer
 import random
@@ -56,39 +57,43 @@ class LoginView(APIView):
         return Response({"detail": "Credenciales inválidas."}, status=status.HTTP_401_UNAUTHORIZED)
 
 class RegisterView(APIView):
-    def post(self, request):
-        username = request.data.get("usuario")
-        password = request.data.get("password")
-        dni = request.data.get("dni")
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        username = data.get('username')
+        password = data.get('password')
+        
+        # Validar que los datos de entrada son correctos
+        if not username or not password:
+            return Response({"detail": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        logger.info(f"Intentando registrar usuario: {username}, DNI: {dni}")
+        # Verificar si el usuario ya existe
+        if CustomUser.objects.filter(username=username).exists():
+            return Response({"detail": "El nombre de usuario ya está en uso."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Verificar si ya existe un usuario con ese nombre de usuario
-            if CustomUser.objects.filter(username=username).exists():
-                logger.warning(f"El nombre de usuario {username} ya está en uso.")
-                return Response({"detail": "El nombre de usuario ya está en uso."}, status=status.HTTP_400_BAD_REQUEST)
+            # Crear el usuario
+            user = CustomUser.objects.create_user(username=username, password=password)
+            user.save()
 
-            # Verificar si el DNI ya está en uso
-            if CustomUser.objects.filter(dni=dni).exists():
-                logger.warning(f"El DNI {dni} ya está en uso.")
-                return Response({"detail": "El DNI ya está registrado."}, status=status.HTTP_400_BAD_REQUEST)
+            # Verificar si ya existe el perfil antes de crearlo
+            user_profile, created = UserProfile.objects.get_or_create(user=user)
+            
+            if created:
+                # Si se crea el perfil, asignar alias y cbu si no existen
+                if not user_profile.alias:
+                    user_profile.alias = user_profile.generate_alias()
+                if not user_profile.cbu:
+                    user_profile.cbu = user_profile.generate_cbu()
+                user_profile.save()
 
-            with transaction.atomic():
-                user = CustomUser.objects.create_user(username=username, password=password, dni=dni)
-                # 🚨 Si esta línea falla, se revierte todo automáticamente
-                UserProfile.objects.create(user=user)
+            return Response({"detail": "Usuario registrado correctamente."}, status=status.HTTP_201_CREATED)
 
-            logger.info(f"Usuario {username} y perfil creados exitosamente.")
-            return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
-
-        except IntegrityError as e:
-            logger.error(f"Error de integridad al registrar usuario {username}: {str(e)}")
-            return Response({"detail": "Error de integridad al registrar usuario. Verifique los datos."}, status=status.HTTP_400_BAD_REQUEST)
+        except ValidationError as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            logger.error(f"Error interno al registrar usuario {username}: {str(e)}")
-            return Response({"detail": "Error interno al registrar. Intente nuevamente."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            logger.error(f"Error al registrar el usuario: {e}")
+            return Response({"detail": "Hubo un error en el proceso de registro."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     # Esto permite validar el token en el Frontend
 class ValidateTokenView(APIView):

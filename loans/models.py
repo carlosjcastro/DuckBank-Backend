@@ -36,8 +36,7 @@ class CustomUser(AbstractUser):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if not hasattr(self, 'userprofile'):
-            UserProfile.objects.create(user=self)
+        UserProfile.objects.get_or_create(user=self)
         if not self.alias:
             self.alias = self.generate_alias()
         if not self.cbu:

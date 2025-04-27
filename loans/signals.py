@@ -27,7 +27,13 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         # Solo crear el perfil si no existe
         if not UserProfile.objects.filter(user=instance).exists():
-            UserProfile.objects.create(user=instance)
+            user_profile = UserProfile.objects.create(user=instance)
+            # Asignar alias y CBU si no existen
+            if not user_profile.alias:
+                user_profile.alias = user_profile.generate_alias()  # Método para generar el alias
+            if not user_profile.cbu:
+                user_profile.cbu = user_profile.generate_cbu()  # Método para generar el CBU
+            user_profile.save()
 
 # Esto permite que cada vez que se cree un usuario, se le asigne un saldo aleatorio entre 40,000 y 500,000
 @receiver(post_save, sender=CustomUser)
