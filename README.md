@@ -1,6 +1,6 @@
-![DuckBank](DuckBank.png)  | Backend
+![DuckBank](DuckBank.png)
 
-# Certificación Avanzada en Full Stack Developer - ITBA - 2024
+# Certificación Avanzada en Full Stack Developer - ITBA - 2024 | Backend
 
 ## Introducción
 La **Certificación Avanzada en Full Stack Developer** del Instituto Tecnológico de Buenos Aires (ITBA) nos permitió desarrollar las competencias técnicas y profesionales necesarias para desempeñarnos como desarrolladores full stack. A lo largo de este programa intensivo, trabajamos en el desarrollo de un sistema de **home banking** llamado **DuckBank**, un banco ficticio diseñado para proporcionar una experiencia de usuario moderna, eficiente y segura.
