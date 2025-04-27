@@ -61,38 +61,30 @@ class RegisterView(APIView):
         password = request.data.get("password")
         dni = request.data.get("dni")
 
-        # Log para ver que se están recibiendo los datos correctamente
         logger.info(f"Intentando registrar usuario: {username}, DNI: {dni}")
 
-        # Verificar si el nombre de usuario ya está en uso
         if CustomUser.objects.filter(username=username).exists():
             logger.warning(f"El nombre de usuario {username} ya está en uso.")
             return Response({"detail": "El nombre de usuario ya está en uso."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Crear el usuario
             user = CustomUser.objects.create_user(username=username, password=password)
             user.dni = dni
             user.save()
 
-            # Verificar si ya existe un perfil para este usuario
-            if not UserProfile.objects.filter(user=user).exists():
-                # Crear el perfil solo si no existe
+            # Crear un perfil solo si no existe
+            if not hasattr(user, 'userprofile'):
                 UserProfile.objects.create(user=user)
-                logger.info(f"Perfil del usuario {username} creado exitosamente.")
-            else:
-                logger.warning(f"El perfil del usuario {username} ya existe.")
 
-            # Log de éxito
             logger.info(f"Usuario {username} creado exitosamente.")
             return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
+
         except IntegrityError as e:
-            # Manejo de excepciones específicas de la base de datos
             logger.error(f"Error de integridad al crear el usuario {username}: {str(e)}")
-            return Response({"detail": f"Error al crear el usuario: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "Error de integridad al crear el usuario."}, status=status.HTTP_400_BAD_REQUEST)
+
         except Exception as e:
-            # Log de error general
-            logger.error(f"Error inesperado al crear el usuario {username}: {str(e)}")
+            logger.error(f"Error al crear el usuario {username}: {str(e)}")
             return Response({"detail": "Error al crear el usuario."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     
