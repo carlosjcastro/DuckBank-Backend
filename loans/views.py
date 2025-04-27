@@ -57,51 +57,46 @@ class LoginView(APIView):
 
 class RegisterView(APIView):
     def post(self, request):
-        username = request.data.get("usuario")
+        username = request.data.get("usuario", "").strip()
         password = request.data.get("password")
-        dni = request.data.get("dni")
+        dni = request.data.get("dni", "").strip()
 
         logger.info(f"Intentando registrar usuario: {username}, DNI: {dni}")
 
+        # Validación previa
+        if not username or not password or not dni:
+            return Response({"detail": "Todos los campos son obligatorios."}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            # Verificar si ya existe un usuario con ese nombre de usuario
             if CustomUser.objects.filter(username=username).exists():
-                logger.warning(f"El nombre de usuario {username} ya está en uso.")
+                logger.warning(f"El nombre de usuario '{username}' ya está en uso.")
                 return Response({"detail": "El nombre de usuario ya está en uso."}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Verificar si el DNI ya está en uso
             if CustomUser.objects.filter(dni=dni).exists():
-                logger.warning(f"El DNI {dni} ya está en uso.")
+                logger.warning(f"El DNI '{dni}' ya está en uso.")
                 return Response({"detail": "El DNI ya está registrado."}, status=status.HTTP_400_BAD_REQUEST)
 
-            with transaction.atomic():  # Iniciar una transacción atómica
-                # Crear el usuario con la contraseña hasheada
+            with transaction.atomic():
                 user = CustomUser.objects.create_user(username=username, password=password)
                 user.dni = dni
                 user.save()
 
-                # Verificar si ya existe un perfil para este usuario
-                if UserProfile.objects.filter(user=user).exists():
-                    logger.warning(f"El perfil para el usuario {username} ya existe.")
-                    return Response({"detail": "Ya existe un perfil para este usuario."}, status=status.HTTP_400_BAD_REQUEST)
-                
-                # Si no existe, crear el perfil
+                # No verificar si el perfil existe, ¡recién se creó el usuario!
                 profile = UserProfile.objects.create(user=user)
                 logger.info(f"Perfil creado para el usuario {username}.")
-                
-            # Retornar respuesta de éxito
+
             logger.info(f"Usuario {username} creado exitosamente.")
             return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
 
         except IntegrityError as e:
-            logger.error(f"Error de integridad al crear el usuario {username}: {str(e)}")
-            transaction.rollback()  # Asegurarse de que se revierta la transacción
-            return Response({"detail": "Error de integridad al crear el usuario. Verifique los datos proporcionados."}, status=status.HTTP_400_BAD_REQUEST)
+            logger.error(f"Error de integridad: {str(e)}")
+            transaction.rollback()
+            return Response({"detail": "Error de integridad al crear el usuario."}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            logger.error(f"Error al crear el usuario {username}: {str(e)}")
-            transaction.rollback()  # Revertir en caso de otros errores
-            return Response({"detail": "Error al crear el usuario. Intente nuevamente."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+            logger.error(f"Error al crear el usuario: {str(e)}")
+            transaction.rollback()
+            return Response({"detail": "Error interno al crear el usuario."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     # Esto permite validar el token en el Frontend
 class ValidateTokenView(APIView):
