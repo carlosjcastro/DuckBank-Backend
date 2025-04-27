@@ -74,12 +74,15 @@ class RegisterView(APIView):
                 logger.warning(f"El DNI {dni} ya está en uso.")
                 return Response({"detail": "El DNI ya está registrado."}, status=status.HTTP_400_BAD_REQUEST)
 
-            with transaction.atomic():  # Iniciar una transacción segura
-                # Crear el usuario
+            with transaction.atomic():
                 user = CustomUser.objects.create_user(username=username, password=password, dni=dni)
-                
-                # Crear el perfil directamente (sin preguntar)
-                UserProfile.objects.create(user=user)
+
+                try:
+                    UserProfile.objects.create(user=user)
+                except Exception as e:
+                    logger.error(f"Error al crear UserProfile para {username}: {str(e)}")
+                    user.delete()  # 🚨 Si falla, eliminamos el usuario que habíamos creado
+                    raise IntegrityError("Fallo la creación del perfil.")
 
                 logger.info(f"Usuario {username} y perfil creados exitosamente.")
                 return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
@@ -89,7 +92,7 @@ class RegisterView(APIView):
             return Response({"detail": "Error de integridad al crear el usuario. Verifique los datos."}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            logger.error(f"Error al crear el usuario {username}: {str(e)}")
+            logger.error(f"Error interno al registrar usuario {username}: {str(e)}")
             return Response({"detail": "Error interno al registrar. Intente nuevamente."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     # Esto permite validar el token en el Frontend
