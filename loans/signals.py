@@ -26,7 +26,7 @@ def crear_tarjeta_debito(sender, instance, created, **kwargs):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         # Solo crear el perfil si no existe
-        if not hasattr(instance, 'userprofile'):
+        if not UserProfile.objects.filter(user=instance).exists():
             UserProfile.objects.create(user=instance)
 
 # Esto permite que cada vez que se cree un usuario, se le asigne un saldo aleatorio entre 40,000 y 500,000
