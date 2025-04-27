@@ -61,10 +61,11 @@ class RegisterView(APIView):
         data = request.data
         username = data.get('username')
         password = data.get('password')
-        
+        dni = data.get('dni')  # Asegurarnos de obtener el DNI del request
+
         # Validar que los datos de entrada son correctos
-        if not username or not password:
-            return Response({"detail": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
+        if not username or not password or not dni:
+            return Response({"detail": "Username, password, and DNI are required."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Verificar si el usuario ya existe
         if CustomUser.objects.filter(username=username).exists():
@@ -79,11 +80,13 @@ class RegisterView(APIView):
             user_profile, created = UserProfile.objects.get_or_create(user=user)
             
             if created:
-                # Si se crea el perfil, asignar alias y cbu si no existen
+                # Si se crea el perfil, asignar alias, cbu y dni si no existen
                 if not user_profile.alias:
                     user_profile.alias = user_profile.generate_alias()
                 if not user_profile.cbu:
                     user_profile.cbu = user_profile.generate_cbu()
+                if not user_profile.dni:
+                    user_profile.dni = dni  # Guardar el DNI ingresado en el perfil
                 user_profile.save()
 
             return Response({"detail": "Usuario registrado correctamente."}, status=status.HTTP_201_CREATED)
