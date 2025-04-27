@@ -10,7 +10,7 @@ from django.conf import settings
 from .models import DebitCard, CustomUser, UserProfile
 from django.core.files import File
 
-# Esto permite que cada vez que se cree un usuario, se cree una tarjeta de débito
+# Crear tarjeta de débito al registrar usuario
 @receiver(post_save, sender=CustomUser)
 def crear_tarjeta_debito(sender, instance, created, **kwargs):
     if created:
@@ -24,36 +24,37 @@ def crear_tarjeta_debito(sender, instance, created, **kwargs):
             fecha_emision=now(),
             fecha_vencimiento=fecha_vencimiento,
         )
-# Esto permite que cada vez que se cree un usuario, se cree un perfil de usuario
-@receiver(post_save, sender=CustomUser)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-        
-@receiver(post_save, sender=CustomUser)
-def save_user_profile(sender, instance, **kwargs):
-    instance.userprofile.save()
-    
-# Esto permite que cada vez que se cree un usuario, se le asigne un saldo aleatorio entre 40,000 y 500,000
+
+# Asignar saldo aleatorio al registrar usuario
 @receiver(post_save, sender=CustomUser)
 def assign_random_balance(sender, instance, created, **kwargs):
     if created:
         random_balance = random.uniform(40000, 500000)
         instance.balance = round(random_balance, 2)
         instance.save()
-        
+
+# Crear perfil de usuario al registrar usuario
 @receiver(post_save, sender=CustomUser)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance)
+        user_profile = UserProfile.objects.create(
+            user=instance,
+            dni=instance.dni,
+            first_name=instance.first_name,
+            last_name=instance.last_name,
+            email=instance.email,
+            profile_image=instance.profile_image,
+        )
+        # Poner imagen de perfil por defecto si no subió imagen
+        if not instance.profile_image:
+            default_image_path = os.path.join(settings.BASE_DIR, 'media', 'profile_images', 'duck_profile.jpeg')
+            if os.path.exists(default_image_path):
+                with open(default_image_path, 'rb') as img_file:
+                    user_profile.profile_image.save('duck_profile.jpeg', File(img_file))
+                user_profile.save()
 
-
-# @receiver(post_save, sender=CustomUser)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     if created:
-#         user_profile = UserProfile.objects.create(user=instance)
-#         default_image_path = os.path.join(settings.BASE_DIR, 'media', 'profile_images', 'duck_profile.jpeg')
-#         if os.path.exists(default_image_path):
-#             with open(default_image_path, 'rb') as img_file:
-#                 user_profile.profile_image.save('duck_profile.jpeg', File(img_file))
-#             user_profile.save()
+# Guardar perfil automáticamente si se actualiza usuario
+@receiver(post_save, sender=CustomUser)
+def save_user_profile(sender, instance, **kwargs):
+    if hasattr(instance, 'userprofile'):
+        instance.userprofile.save()
