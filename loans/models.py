@@ -23,9 +23,6 @@ class CustomUser(AbstractUser):
     alias = models.CharField(max_length=20, unique=True, blank=True, null=True)
     cbu = models.CharField(max_length=22, unique=True, blank=True, null=True)
 
-    groups = models.ManyToManyField(Group, related_name="customuser_set", blank=True)
-    user_permissions = models.ManyToManyField(Permission, related_name="customuser_set", blank=True)
-
     def generate_alias(self):
         """Genera un alias aleatorio para el usuario"""
         return f"USER{random.randint(100000, 999999)}"
@@ -35,14 +32,16 @@ class CustomUser(AbstractUser):
         return f"{random.randint(1000000000000000000000, 9999999999999999999999)}"
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if not hasattr(self, 'userprofile'):
-            UserProfile.objects.create(user=self)
         if not self.alias:
             self.alias = self.generate_alias()
         if not self.cbu:
             self.cbu = self.generate_cbu()
-        super().save(*args, **kwargs)
+
+        super().save(*args, **kwargs)  # Guardar el usuario
+
+        # Crear el perfil solo si no existe ya
+        if not hasattr(self, 'userprofile'):
+            UserProfile.objects.create(user=self)
 
     def __str__(self):
         return self.username

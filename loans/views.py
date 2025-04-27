@@ -69,8 +69,13 @@ class RegisterView(APIView):
                 logger.warning(f"El nombre de usuario {username} ya está en uso.")
                 return Response({"detail": "El nombre de usuario ya está en uso."}, status=status.HTTP_400_BAD_REQUEST)
 
+            # Verificar si el DNI ya está en uso
+            if CustomUser.objects.filter(dni=dni).exists():
+                logger.warning(f"El DNI {dni} ya está en uso.")
+                return Response({"detail": "El DNI ya está registrado."}, status=status.HTTP_400_BAD_REQUEST)
+
             with transaction.atomic():  # Iniciar una transacción atómica
-                # Crear el usuario
+                # Crear el usuario con la contraseña hasheada
                 user = CustomUser.objects.create_user(username=username, password=password)
                 user.dni = dni
                 user.save()
@@ -79,9 +84,10 @@ class RegisterView(APIView):
                 if UserProfile.objects.filter(user=user).exists():
                     logger.warning(f"El perfil para el usuario {username} ya existe.")
                     return Response({"detail": "Ya existe un perfil para este usuario."}, status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    profile = UserProfile.objects.create(user=user)
-                    logger.info(f"Perfil creado para el usuario {username}.")
+                
+                # Si no existe, crear el perfil
+                profile = UserProfile.objects.create(user=user)
+                logger.info(f"Perfil creado para el usuario {username}.")
                 
             # Retornar respuesta de éxito
             logger.info(f"Usuario {username} creado exitosamente.")
