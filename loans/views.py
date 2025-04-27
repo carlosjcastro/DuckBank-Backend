@@ -68,12 +68,14 @@ class RegisterView(APIView):
             return Response({"detail": "El nombre de usuario ya está en uso."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
+            # Crear el usuario
             user = CustomUser.objects.create_user(username=username, password=password)
             user.dni = dni
             user.save()
 
-            # Crear un perfil solo si no existe
+            # Verificar si ya existe un perfil de usuario
             if not hasattr(user, 'userprofile'):
+                # Solo crear un nuevo perfil si no existe
                 UserProfile.objects.create(user=user)
 
             logger.info(f"Usuario {username} creado exitosamente.")
