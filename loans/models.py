@@ -31,8 +31,8 @@ class CustomUser(AbstractUser):
         return f"USER{random.randint(100000, 999999)}"
 
     def generate_cbu(self):
-        """Genera un CBU aleatorio de 22 dígitos"""
-        return f"{random.randint(10000000000000000000000, 99999999999999999999999)}"
+        """Genera un CBU aleatorio de exactamente 22 dígitos"""
+        return ''.join(str(random.randint(0, 9)) for _ in range(22))
 
     def save(self, *args, **kwargs):
         """Sobreescribir el método save para generar alias y CBU si no existen"""
