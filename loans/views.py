@@ -76,12 +76,13 @@ class RegisterView(APIView):
                 user.save()
 
                 # Verificar si ya existe un perfil para este usuario
-                if not UserProfile.objects.filter(user=user).exists():
+                if UserProfile.objects.filter(user=user).exists():
+                    logger.warning(f"El perfil para el usuario {username} ya existe.")
+                    return Response({"detail": "Ya existe un perfil para este usuario."}, status=status.HTTP_400_BAD_REQUEST)
+                else:
                     profile = UserProfile.objects.create(user=user)
                     logger.info(f"Perfil creado para el usuario {username}.")
-                else:
-                    logger.info(f"El perfil para el usuario {username} ya existe.")
-
+                
             # Retornar respuesta de éxito
             logger.info(f"Usuario {username} creado exitosamente.")
             return Response({"detail": "Usuario creado exitosamente."}, status=status.HTTP_201_CREATED)
@@ -89,12 +90,12 @@ class RegisterView(APIView):
         except IntegrityError as e:
             logger.error(f"Error de integridad al crear el usuario {username}: {str(e)}")
             transaction.rollback()  # Asegurarse de que se revierta la transacción
-            return Response({"detail": "Error de integridad al crear el usuario."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "Error de integridad al crear el usuario. Verifique los datos proporcionados."}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             logger.error(f"Error al crear el usuario {username}: {str(e)}")
             transaction.rollback()  # Revertir en caso de otros errores
-            return Response({"detail": "Error al crear el usuario."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": "Error al crear el usuario. Intente nuevamente."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     
     # Esto permite validar el token en el Frontend
