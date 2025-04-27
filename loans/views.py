@@ -61,7 +61,10 @@ class RegisterView(APIView):
         data = request.data
         username = data.get('username')
         password = data.get('password')
-        dni = data.get('dni')  # Asegurarnos de obtener el DNI del request
+        dni = data.get('dni')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        email = data.get('email')
 
         # Validar que los datos de entrada son correctos
         if not username or not password or not dni:
@@ -76,17 +79,18 @@ class RegisterView(APIView):
             user = CustomUser.objects.create_user(username=username, password=password)
             user.save()
 
-            # Verificar si ya existe el perfil antes de crearlo
+            # Crear el perfil del usuario
             user_profile, created = UserProfile.objects.get_or_create(user=user)
-            
             if created:
-                # Si se crea el perfil, asignar alias, cbu y dni si no existen
+                user_profile.first_name = first_name or 'N/A'
+                user_profile.last_name = last_name or 'N/A'
+                user_profile.email = email or ''
+                user_profile.dni = dni
+                # Asignar alias y CBU si no existen
                 if not user_profile.alias:
                     user_profile.alias = user_profile.generate_alias()
                 if not user_profile.cbu:
                     user_profile.cbu = user_profile.generate_cbu()
-                if not user_profile.dni:
-                    user_profile.dni = dni  # Guardar el DNI ingresado en el perfil
                 user_profile.save()
 
             return Response({"detail": "Usuario registrado correctamente."}, status=status.HTTP_201_CREATED)
@@ -271,7 +275,7 @@ class AssignedSucursalView(APIView):
             },
             status=status.HTTP_200_OK
         )
-# Esto permite al usuario actualizar su perfil y guardar los cambios
+# Actualización del perfil de usuario
 class UpdateUserProfileView(APIView):
     parser_classes = [MultiPartParser, FormParser]
     permission_classes = [IsAuthenticated]
@@ -307,6 +311,7 @@ class UpdateUserProfileView(APIView):
             'profile_image': user_profile.profile_image.url if user_profile.profile_image else None
         })
 
+# Obtener perfil de usuario
 class GetUserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -367,9 +372,7 @@ class GetFullUserDetailsView(APIView):
 
         try:
             user_profile = user.userprofile
-
             sucursal = user.sucursal
-
             sucursal_nombre = sucursal.nombre if sucursal else 'No asignada'
 
             user_data = {

@@ -32,18 +32,15 @@ class CustomUser(AbstractUser):
 
     def generate_cbu(self):
         """Genera un CBU aleatorio de 22 dígitos"""
-        return f"{random.randint(1000000000000000000000, 9999999999999999999999)}"
+        return f"{random.randint(10000000000000000000000, 99999999999999999999999)}"
 
     def save(self, *args, **kwargs):
-        # Generar alias y cbu solo si no existen
+        """Sobreescribir el método save para generar alias y CBU si no existen"""
         if not self.alias:
             self.alias = self.generate_alias()
         if not self.cbu:
             self.cbu = self.generate_cbu()
-        # Guardar el objeto CustomUser
         super().save(*args, **kwargs)
-        # Crear el perfil del usuario
-        UserProfile.objects.get_or_create(user=self)
 
     def __str__(self):
         return self.username
@@ -79,12 +76,12 @@ class DebitCard(models.Model):
         return f"{self.tipo} - {self.numero}"
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, unique=True)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255, default="")
-    email = models.EmailField()
-    dni = models.CharField(max_length=20)
-    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=30, blank=True, null=True)
+    last_name = models.CharField(max_length=30, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    dni = models.CharField(max_length=20, blank=True, null=True)
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
 
     def __str__(self):
         return self.user.username
