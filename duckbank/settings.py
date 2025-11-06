@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-c-mxt$qgqo^l%0a!kj!9_yk31j3^w0yz^p5@l54@_q@t%xuvzv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'False'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,web-production-b8a3.up.railway.app,duckbank.vercel.app').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,web-production-b8a3.up.railway.app,duckbank.vercel.app', 'duckbank-backend.onrender.com').split(',')
 
 
 # Application definition
