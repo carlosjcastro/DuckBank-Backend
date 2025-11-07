@@ -25,6 +25,7 @@ from .models import CustomUser
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 import logging
 logger = logging.getLogger(__name__)
+from datetime import datetime
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -485,3 +486,10 @@ class TransferenciasAPIView(APIView):
             'transferencias': serializer.data
         }, status=status.HTTP_200_OK)
         
+# Estado del servidor DuckBank
+def status_view(request):
+    return JsonResponse({
+        "status": "online",
+        "message": "Servidor DuckBank activo 🦆",
+        "timestamp": datetime.now().isoformat()
+    })
