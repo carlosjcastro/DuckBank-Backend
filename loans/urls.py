@@ -34,7 +34,7 @@ urlpatterns = [
     path('transferencias/', TransferenciasAPIView.as_view(), name='transferencias'),
     # path('user-sucursal/', UserSucursalView.as_view(), name='user_sucursal'),
     path("mi-sucursal/", AssignedSucursalView.as_view(), name="mi-sucursal"),
-    path('api/status/', status_view),
+    path('status/', status_view),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

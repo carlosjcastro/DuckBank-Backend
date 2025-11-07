@@ -490,6 +490,6 @@ class TransferenciasAPIView(APIView):
 def status_view(request):
     return JsonResponse({
         "status": "online",
-        "message": "Servidor DuckBank activo 🦆",
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now().isoformat(),
+        "message": "Servidor Django activo 🦆"
     })
