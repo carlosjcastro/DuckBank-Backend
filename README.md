@@ -148,14 +148,21 @@ A continuación se detalla el contenido y los aprendizajes de cada uno:
 
 ---
 
-## 🧾 Funcionalidades del Sistema
+## 🧾 Funcionalidades de Sistema
 
 - 🔐 Registro e inicio de sesión con autenticación segura.  
-- 💰 Consulta de saldos y movimientos.  
-- 🔄 Transferencias entre cuentas propias o de terceros.  
+- 💰 Consulta de saldos y movimientos con animación y persistencia de datos.
+- 🔄 Transferencias entre cuentas propias o de terceros mediante CBU o Alias (User).
+- 📜 Historial de transferencias realizadas o recibidas, con persistencia de datos.
 - 💳 Solicitud y cancelación de préstamos o tarjetas.  
-- 🏠 Edición de datos personales.  
+- 🏠 Edición de datos personales. 
 - 📊 Panel financiero con resumen general.  
+- 💳 Consulta automática de tarjeta asociada a la cuenta al registrarse, con persistencia en base de datos.  
+- ✨ Dinamismo y animaciones en diferentes funciones y características.  
+- ⚠️ Validaciones de errores en formularios para mejorar la experiencia del usuario.  
+- 🌐 Estado actual del servidor en tiempo real.  
+- 🎲 CBU asignado automáticamente con datos aleatorios, con persistencia de datos.  
+- 🏦 Asignación de sucursal según la provincia elegida, con persistencia de datos.
 
 ---
 
@@ -202,3 +209,6 @@ Durante la certificación también se realizaron talleres de desarrollo profesio
 El resultado fue un sistema completo de **home banking moderno**, con arquitectura **Full Stack**, enfoque en la **seguridad**, **eficiencia** y **experiencia del usuario**.
 
 > 💡 *“DuckBank combina fundamentos sólidos de programación, diseño modular y herramientas actuales del desarrollo web profesional.”*
+
+
+*💡 Nota Académica: Este proyecto aborda de manera completa y práctica todos los contenidos de Programación I, incluyendo variables, estructuras de control, funciones, arreglos, objetos, manipulación del DOM, eventos, estructuras de datos simples (listas, pilas, colas) y pruebas unitarias.*
