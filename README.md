@@ -1,168 +1,214 @@
 ![DuckBank](DuckBank.png)
 
-# Certificación Avanzada en Full Stack Developer - ITBA - 2024 | Backend
+# Certificación Avanzada en Full Stack Developer - ITBA - 2024
 
-## Introducción
-La **Certificación Avanzada en Full Stack Developer** del Instituto Tecnológico de Buenos Aires (ITBA) nos permitió desarrollar las competencias técnicas y profesionales necesarias para desempeñarnos como desarrolladores full stack. A lo largo de este programa intensivo, trabajamos en el desarrollo de un sistema de **home banking** llamado **DuckBank**, un banco ficticio diseñado para proporcionar una experiencia de usuario moderna, eficiente y segura.
+## 🧭 Introducción
 
-El proyecto fue desarrollado en equipo utilizando **metodologías ágiles** durante **8 sprints**, lo que nos permitió abordar todos los aspectos del desarrollo de software: desde la planificación y el diseño hasta la implementación y el despliegue.
+**DuckBank** es un sistema de *home banking* desarrollado como proyecto final de la **Certificación Avanzada en Full Stack Developer** del ITBA.  
+Durante el programa, el equipo diseñó y construyó un banco digital ficticio con enfoque en **usabilidad, seguridad y arquitectura full stack moderna**.
 
----
+El proyecto se desarrolló en **8 sprints** bajo metodología **ágil (Scrum)**, abordando todos los ejes de formación del curso: desarrollo front-end, back-end, bases de datos y APIs.
 
-## Metodología de Trabajo
-El desarrollo del proyecto se llevó a cabo en un equipo de **tres integrantes**, utilizando principios de **Scrum** para gestionar el trabajo de manera iterativa e incremental. Cada sprint tenía como objetivo entregar un MVP funcional según los requerimientos del Product Owner (PO).
-
-### Distribución del Tiempo:
-- **6 horas semanales** de clases sincrónicas con acompañamiento del tech lead.
-- **6 horas semanales** de trabajo asincrónico para el desarrollo del proyecto.
-- **1 taller mensual opcional** enfocado en competencias blandas.
+👨‍💻 **Equipo de desarrollo**
+- Carlos José Castro Galante  
+- Celina Bono  
+- Ignacio Iannino  
 
 ---
 
-## Desarrollo del Proyecto
+## 🧩 Metodología de Trabajo
 
-### **Sprint 1: Introducción a la Web**
-- **Tecnologías**: HTML, CSS, JavaScript.
-- **Objetivo**: Crear las primeras interfaces de usuario para DuckBank.
-- **Conceptos trabajados**:
-  - Estructura y semántica de páginas web.
-  - Creación de estilos básicos y avanzados con CSS.
-  - Uso de JavaScript para manipular el DOM.
-  - Introducción a objetos y estructuras de datos en formato JSON.
-
-### **Sprint 2: Desarrollo Front-End con ReactJS**
-- **Tecnologías**: ReactJS.
-- **Objetivo**: Construir una SPA (Single Page Application) para el sistema de home banking.
-- **Conceptos trabajados**:
-  - Componentes reutilizables y manejo de estados.
-  - Gestión de estados globales con React Context.
-  - Navegación con React Router.
-
-### **Sprint 3: Optimización con Next.js**
-- **Tecnologías**: Next.js.
-- **Objetivo**: Mejorar el rendimiento y la indexación del sistema.
-- **Conceptos trabajados**:
-  - Diferencias entre renderizado estático y dinámico.
-  - Optimización para SEO.
-  - Estrategias de fetching y manejo de rutas dinámicas.
-
-### **Sprint 4: Introducción a Python**
-- **Tecnologías**: Python.
-- **Objetivo**: Sentar las bases del back-end del sistema.
-- **Conceptos trabajados**:
-  - Estructuras de control y manejo de datos complejos.
-  - Funciones y manejo de archivos.
-
-### **Sprint 5: Programación Orientada a Objetos**
-- **Tecnologías**: Python.
-- **Objetivo**: Implementar una lógica robusta en el back-end.
-- **Conceptos trabajados**:
-  - Modularización y encapsulamiento.
-  - Herencia y polimorfismo.
-  - Manejo de excepciones y pruebas unitarias.
-
-### **Sprint 6: Introducción a Bases de Datos**
-- **Tecnologías**: SQL.
-- **Objetivo**: Crear y gestionar la base de datos para DuckBank.
-- **Conceptos trabajados**:
-  - Consultas básicas y avanzadas (joins, subconsultas, transacciones).
-  - Creación de vistas, índices y triggers.
-
-### **Sprint 7: Desarrollo Back-End con Django**
-- **Tecnologías**: Django.
-- **Objetivo**: Construir el back-end del sistema.
-- **Conceptos trabajados**:
-  - Arquitectura MVC.
-  - ORM para la gestión de bases de datos.
-  - Formularios, sesiones y autenticación.
-
-### **Sprint 8: APIs REST con Django REST Framework**
-- **Tecnologías**: Django REST Framework (DRF).
-- **Objetivo**: Exponer servicios para la integración del front-end con el back-end.
-- **Conceptos trabajados**:
-  - Creación de endpoints CRUD.
-  - Autenticación y manejo de relaciones en APIs.
+📆 **Duración total:** 8 sprints (aprox. 4 meses)  
+👥 **Modalidad:** Trabajo en equipo con acompañamiento de Tech Lead y RRHH  
+⚙️ **Metodología:** Scrum con entregas incrementales con MVP funcional por sprint  
+⏱️ **Dedicación semanal:**  
+- 6 h de clases sincrónicas  
+- 6 h de desarrollo asincrónico  
+🧠 **Soft Skills Workshops (mensuales):**
+- Future Thinking & Future Skills  
+- Business Agility  
+- Generative AI Applications  
+- Organización y productividad digital  
 
 ---
 
-## 🧠 Lógica y estructura del sistema
+## 🚀 Desarrollo del Proyecto
 
-- Implementación de **estructuras de datos** (arreglos, objetos y colecciones) para gestionar usuarios, cuentas, préstamos y movimientos.  
-- Uso de **estructuras de control de flujo** (condicionales, bucles y funciones) para validar operaciones y mantener la consistencia del sistema.  
-- Aplicación de **modularización del código** mediante componentes reutilizables y funciones especializadas.  
-- Manejo de **eventos** y actualización del estado mediante el paradigma **orientado a eventos** en React.  
-- Implementación de **validaciones dinámicas** en formularios y flujos de registro.  
-- Persistencia y consulta de datos mediante operaciones CRUD (crear, leer, actualizar y eliminar).  
-- Comunicación entre cliente y servidor a través de **APIs RESTful**.  
-- Uso de **métodos de iteración y manipulación de datos** (map, filter, reduce) para el procesamiento de información.  
-- Diseño de **interfaces interactivas** con retroalimentación en tiempo real al usuario.
-
-## ¿Qué ofrece el proyecto?
-- 🧾 Registro e inicio de sesión con autenticación segura.  
-- 💰 Consulta de saldos, movimientos y estado general de las cuentas.  
-- 🔄 Realización de transferencias entre cuentas propias o de terceros.  
-- 💳 Solicitud y cancelación de préstamos.  
-- 🪪 Solicitud o eliminación de tarjetas.  
-- 🏠 Actualización de datos personales y dirección.  
-- 📊 Visualización de un panel financiero general con resúmenes 
-
-📎 *El desarrollo del sistema integró principios de lógica algorítmica, estructuras de datos y diseño modular aplicados a un entorno web moderno.*
+El proyecto DuckBank siguió una estructura de **8 sprints**, cada uno representando una unidad temática con un objetivo técnico y funcional definido.  
+A continuación se detalla el contenido y los aprendizajes de cada uno:
 
 ---
 
-## Tecnologías y Herramientas Utilizadas
+### 🏁 Sprint 1 — *Introducción a la Web*
+**Temas:** HTML, CSS, JavaScript, DOM, Arreglos, Objetos, JSON  
+**Objetivo:** Crear las primeras interfaces del sistema y sentar las bases del front-end.  
 
-### **Front-End**:
-- HTML5 / CSS3.
-- JavaScript ES6+.
-- ReactJS.
-- Next.js.
-
-### **Back-End**:
-- Python.
-- Django.
-- Django REST Framework (DRF).
-
-### **Base de Datos**:
-- SQL.
-
-### **Otras Herramientas**:
-- Git y GitHub para control de versiones.
-- Visual Studio Code como entorno de desarrollo.
-- Postman para pruebas de APIs.
-- Metodologías ágiles para la gestión del equipo y los sprints.
+**✅ Contenidos clave:**
+- Estructura y semántica de páginas web.  
+- Estilos avanzados con CSS (selectores, jerarquías, flexbox).  
+- Manipulación dinámica del DOM con JavaScript.  
+- Uso de estructuras de datos (arrays, objetos) y formato JSON.  
 
 ---
 
-## Talleres de Competencias Blandas
-Mensualmente participamos en talleres opcionales enfocados en el desarrollo profesional:
-1. **Future Thinking y Future Skills**: Preparación para el futuro laboral.
-2. **Business Agility**: Adaptación a entornos dinámicos.
-3. **Inteligencia Artificial Generativa**: Aplicaciones en el desarrollo.
-4. **Organización del tiempo y trabajo digital**: Estrategias de productividad.
+### ⚛️ Sprint 2 — *Desarrollo Front-End con ReactJS*
+**Temas:** Componentes, props, estados, JSX, React Context, SPA, React Router, UI/UX.  
+**Objetivo:** Construir una *Single Page Application* (SPA) para el sistema de home banking.  
+
+**✅ Contenidos clave:**
+- Componentes reutilizables y modularización.  
+- Manejo de estados locales y globales (Context API).  
+- Navegación con React Router.  
+- Diseño centrado en la experiencia de usuario.  
 
 ---
 
-## Conocimientos Adquiridos
-El programa nos permitió adquirir habilidades prácticas en:
-- Diseño e implementación de interfaces web responsivas.
-- Desarrollo de aplicaciones SPA utilizando ReactJS y Next.js.
-- Creación y gestión de bases de datos SQL.
-- Construcción y consumo de APIs RESTful con Django y DRF.
-- Programación orientada a objetos y realización de pruebas unitarias.
-- Trabajo en equipo bajo metodologías ágiles.
+### 🚀 Sprint 3 — *Optimización con Next.js*
+**Temas:** Rendering (SSR, SSG), Fetching, Dynamic Routing, SEO, Performance.  
+**Objetivo:** Mejorar el rendimiento y la indexación del sistema.  
+
+**✅ Contenidos clave:**
+- Renderizado estático y dinámico.  
+- Fetching de datos con rutas dinámicas.  
+- Optimización SEO y mejora de tiempo de carga.  
+- Estrategias de rendimiento y caching.  
 
 ---
 
-## Integrantes del Equipo
+### 🐍 Sprint 4 — *Introducción a Python*
+**Temas:** Estructuras de control, funciones, tipos de datos complejos, manejo de archivos.  
+**Objetivo:** Desarrollar la base lógica del back-end.  
 
-- **[Carlos José Castro Galante](https://www.linkedin.com/in/carlosjcastrog/)**
-- **[Celina Bono](https://www.linkedin.com/in/celina-bono/)**
-- **[Ignacio Iannino](https://www.linkedin.com/in/nacho-i-9341822a1/)**
+**✅ Contenidos clave:**
+- Condicionales, bucles y funciones modulares.  
+- Uso de listas, diccionarios y tuplas.  
+- Lectura y escritura de archivos.  
+- Primeros ejercicios de lógica de negocio.  
 
 ---
 
-## Resultado Final
-El resultado fue un sistema completo de **home banking** para **DuckBank**, con funcionalidades modernas y una arquitectura robusta que refleja las mejores prácticas en el desarrollo de software full stack.
+### 🧱 Sprint 5 — *Programación Orientada a Objetos (POO)*
+**Temas:** Módulos, paquetes, manejo de errores, POO, herencia, polimorfismo, pruebas unitarias.  
+**Objetivo:** Implementar una lógica robusta, modular y testeable.  
 
-¡Gracias por visitar nuestro proyecto!
+**✅ Contenidos clave:**
+- Encapsulamiento y modularización del código.  
+- Clases para usuarios, cuentas, préstamos y tarjetas.  
+- Aplicación de herencia y polimorfismo.  
+- Ejecución de pruebas unitarias automatizadas.  
+
+---
+
+### 🗃️ Sprint 6 — *Bases de Datos y SQL*
+**Temas:** Consultas, Joins, subconsultas, transacciones, CASE, Views, índices, triggers.  
+**Objetivo:** Diseñar y administrar la base de datos del sistema.  
+
+**✅ Contenidos clave:**
+- Modelado relacional de entidades (usuarios, cuentas, préstamos, movimientos).  
+- Operaciones CRUD y consultas avanzadas.  
+- Control de integridad referencial y transacciones.  
+- Creación de vistas e índices para optimización.  
+
+---
+
+### 🧩 Sprint 7 — *Desarrollo Back-End con Django*
+**Temas:** ORM, arquitectura MVC, modelos, clases, formularios, sesiones, autenticación, seguridad.  
+**Objetivo:** Construir el servidor web y conectar el back-end con la base de datos.  
+
+**✅ Contenidos clave:**
+- Creación de modelos, clases y vistas controladoras.  
+- Formularios, validaciones y autenticación de usuarios.  
+- Manejo de sesiones y middleware de seguridad.  
+- Integración con el ORM de Django.  
+
+---
+
+### 🔗 Sprint 8 — *APIs REST con Django REST Framework (DRF)*
+**Temas:** Endpoints POST, GET, PUT, DELETE, autenticación, relaciones, serialización.  
+**Objetivo:** Integrar el front-end con el back-end mediante una API RESTful completa.  
+
+**✅ Contenidos clave:**
+- Creación de endpoints CRUD.  
+- Autenticación mediante tokens.  
+- Relaciones entre modelos (OneToMany, ManyToMany).  
+- Pruebas de endpoints con Postman.  
+
+---
+
+## 🧠 Lógica y Estructura del Sistema
+
+- Implementación de **estructuras de datos** (arrays, objetos, colecciones).  
+- Uso de **estructuras de control de flujo** para validaciones y operaciones.  
+- Modularización y reutilización de componentes en React.  
+- **Eventos** y **estado reactivo** para interactividad en tiempo real.  
+- **Operaciones CRUD** para persistencia de datos.  
+- **Comunicación cliente-servidor** vía API RESTful.  
+- Procesamiento de datos con métodos de iteración (`map`, `filter`, `reduce`).  
+- Interfaz responsive con feedback visual y validaciones dinámicas.  
+
+---
+
+## 🧾 Funcionalidades de Sistema
+
+- 🔐 Registro e inicio de sesión con autenticación segura.  
+- 💰 Consulta de saldos y movimientos con animación y persistencia de datos.
+- 🔄 Transferencias entre cuentas propias o de terceros mediante CBU o Alias (User).
+- 📜 Historial de transferencias realizadas o recibidas, con persistencia de datos.
+- 💳 Solicitud y cancelación de préstamos o tarjetas.  
+- 🏠 Edición de datos personales. 
+- 📊 Panel financiero con resumen general.  
+- 💳 Consulta automática de tarjeta asociada a la cuenta al registrarse, con persistencia en base de datos.  
+- ✨ Dinamismo y animaciones en diferentes funciones y características.  
+- ⚠️ Validaciones de errores en formularios para mejorar la experiencia del usuario.  
+- 🌐 Estado actual del servidor en tiempo real.  
+- 🎲 CBU asignado automáticamente con datos aleatorios, con persistencia de datos.  
+- 🏦 Asignación de sucursal según la provincia elegida, con persistencia de datos.
+
+---
+
+## 🧰 Tecnologías y Herramientas
+
+**Frontend:**  
+`HTML5` · `CSS3` · `JavaScript (ES6+)` · `ReactJS` · `Next.js`
+
+**Backend:**  
+`Python` · `Django` · `Django REST Framework (DRF)`
+
+**Base de Datos:**  
+`SQL`
+
+**Herramientas:**  
+`Git` · `GitHub` · `Visual Studio Code` · `Postman` · `Vercel`  
+`Metodologías Ágiles` · `Scrum` · `CI/CD`  
+
+---
+
+## 🧑‍💼 Competencias Blandas
+
+Durante la certificación también se realizaron talleres de desarrollo profesional:  
+- **Future Thinking & Future Skills** – preparación para el futuro laboral.  
+- **Business Agility** – adaptación a entornos dinámicos.  
+- **Generative AI** – aplicaciones modernas en desarrollo.  
+- **Gestión del tiempo y productividad digital.**  
+
+---
+
+## 🎓 Conocimientos Adquiridos
+
+- Diseño e implementación de **interfaces web responsivas**.  
+- Desarrollo de **aplicaciones SPA** con React y Next.js.  
+- Creación y administración de **bases de datos SQL**.  
+- Construcción y consumo de **APIs RESTful**.  
+- Programación **orientada a objetos** y pruebas unitarias.  
+- Trabajo colaborativo bajo **metodologías ágiles**.  
+
+---
+
+## 🧩 Resultado Final
+
+El resultado fue un sistema completo de **home banking moderno**, con arquitectura **Full Stack**, enfoque en la **seguridad**, **eficiencia** y **experiencia del usuario**.
+
+> 💡 *“DuckBank combina fundamentos sólidos de programación, diseño modular y herramientas actuales del desarrollo web profesional.”*
+
+
+*💡 Nota Académica: Este proyecto aborda de manera completa y práctica todos los contenidos de Programación I, incluyendo variables, estructuras de control, funciones, arreglos, objetos, manipulación del DOM, eventos, estructuras de datos simples (listas, pilas, colas) y pruebas unitarias.*
