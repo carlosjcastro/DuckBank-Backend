@@ -220,21 +220,38 @@ class UpdateSucursalView(APIView):
     def post(self, request, id, *args, **kwargs):
         try:
             user = request.user
-            if not user.can_change_sucursal:
-                return Response({"error": "No tienes permiso para cambiar tu sucursal."}, status=status.HTTP_403_FORBIDDEN)
-
             sucursal = Sucursal.objects.get(id=id)
 
+            if user.sucursal_change_count >= 2:
+                return Response(
+                    {"error": "Ya alcanzaste el límite de cambios de sucursal."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
             user.sucursal = sucursal
-            user.can_change_sucursal = False
+            user.sucursal_change_count += 1
+
+            # Si ya llegó a los 2 cambios, se bloquean futuros cambios
+            if user.sucursal_change_count >= 2:
+                user.can_change_sucursal = False
+
             user.save()
 
-            return Response({"message": "Sucursal actualizada correctamente!"}, status=status.HTTP_200_OK)
+            return Response(
+                {"message": "Sucursal actualizada correctamente."},
+                status=status.HTTP_200_OK
+            )
 
         except Sucursal.DoesNotExist:
-            return Response({"error": "Sucursal no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "Sucursal no encontrada."},
+                status=status.HTTP_404_NOT_FOUND
+            )
         except Exception as e:
-            return Response({"error": f"Error al actualizar la sucursal: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": f"Error al actualizar la sucursal: {str(e)}"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
      
 class ReactivateSucursalChangeView(APIView):
     permission_classes = [IsAdminUser]
@@ -254,7 +271,11 @@ class CheckSucursalPermissionView(APIView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
-        return Response({"can_change_sucursal": user.can_change_sucursal}, status=status.HTTP_200_OK)
+        return Response({
+            "can_change_sucursal": user.can_change_sucursal,
+            "sucursal_change_count": user.sucursal_change_count,
+            "changes_left": max(0, 2 - user.sucursal_change_count)
+        }, status=status.HTTP_200_OK)
 
 # Esto permite mostrar al usuario la sucursal asignada
 class AssignedSucursalView(APIView):
@@ -493,3 +514,12 @@ def status_view(request):
         "timestamp": datetime.now().isoformat(),
         "message": "Servidor Django activo 🦆"
     })
+
+class ReactivateSucursalChangeView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, user_id, *args, **kwargs):
+        user = CustomUser.objects.get(id=user_id)
+        user.can_change_sucursal = True
+        user.save()
+        return Response({"message": "Permiso para cambiar sucursal reactivado."})

@@ -18,6 +18,7 @@ class CustomUser(AbstractUser):
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     sucursal = models.ForeignKey('Sucursal', null=True, blank=True, on_delete=models.SET_NULL)
     can_change_sucursal = models.BooleanField(default=True)
+    sucursal_change_count = models.PositiveIntegerField(default=0)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     dni = models.CharField(max_length=20, blank=True, null=True)
     alias = models.CharField(max_length=20, unique=True, blank=True, null=True)
