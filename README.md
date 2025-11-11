@@ -163,6 +163,7 @@ A continuación se detalla el contenido y los aprendizajes de cada uno:
 - 🌐 Estado actual del servidor en tiempo real.  
 - 🎲 CBU asignado automáticamente con datos aleatorios, con persistencia de datos.  
 - 🏦 Asignación de sucursal según la provincia elegida, con persistencia de datos.
+- 🗑️ Solicitud y eliminación permanente de cuenta, con borrado total de datos personales y financieros.
 
 ---
 
