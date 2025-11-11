@@ -515,11 +515,28 @@ def status_view(request):
         "message": "Servidor Django activo 🦆"
     })
 
-class ReactivateSucursalChangeView(APIView):
-    permission_classes = [IsAdminUser]
+# Eliminación de cuenta
+class DeleteAccountView(APIView):
+    permission_classes = [IsAuthenticated]
+        
+    def delete(self, request):
+        user = request.user
+        username = user.username
 
-    def post(self, request, user_id, *args, **kwargs):
-        user = CustomUser.objects.get(id=user_id)
-        user.can_change_sucursal = True
+        # Eliminar el perfil asociado si existe
+        try:
+            if hasattr(user, 'userprofile'):
+                user.userprofile.delete()
+        except Exception as e:
+            print(f"Error eliminando perfil: {e}")
+
+        # Eliminar sucursal o relaciones adicionales si las hay
+        user.sucursal = None
         user.save()
-        return Response({"message": "Permiso para cambiar sucursal reactivado."})
+
+        user.delete()
+
+        return Response(
+            {"detail": f"La cuenta '{username}' fue eliminada correctamente."},
+            status=status.HTTP_200_OK
+        )

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import UserViewSet, LoanViewSet, RegisterView, LoginView, status_view
+from .views import DeleteAccountView, UserViewSet, LoanViewSet, RegisterView, LoginView, status_view
 from .views import ValidateTokenView, SolicitarPrestamoView, ObtenerPrestamosView, ListDebitCardsView, SucursalListView, UpdateSucursalView, ReactivateSucursalChangeView, CheckSucursalPermissionView, UpdateUserProfileView, GetUserProfileView, GetUserBalanceView,ConsultarCuentaView, GetFullUserDetailsView, EliminarPrestamoView, TransferirAPIView, TransferenciasAPIView, AssignedSucursalView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -35,6 +35,7 @@ urlpatterns = [
     # path('user-sucursal/', UserSucursalView.as_view(), name='user_sucursal'),
     path("mi-sucursal/", AssignedSucursalView.as_view(), name="mi-sucursal"),
     path('status/', status_view),
+    path('delete-account/', DeleteAccountView.as_view(), name='delete-account'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
