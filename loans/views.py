@@ -518,25 +518,21 @@ def status_view(request):
 # Eliminación de cuenta
 class DeleteAccountView(APIView):
     permission_classes = [IsAuthenticated]
-        
+
     def delete(self, request):
         user = request.user
         username = user.username
 
-        # Eliminar el perfil asociado si existe
-        try:
-            if hasattr(user, 'userprofile'):
-                user.userprofile.delete()
-        except Exception as e:
-            print(f"Error eliminando perfil: {e}")
+        if hasattr(user, "userprofile"):
+            user.userprofile.delete()
 
-        # Eliminar sucursal o relaciones adicionales si las hay
-        user.sucursal = None
-        user.save()
+        if hasattr(user, "sucursal"):
+            user.sucursal = None
+            user.save()
 
         user.delete()
 
         return Response(
             {"detail": f"La cuenta '{username}' fue eliminada correctamente."},
-            status=status.HTTP_200_OK
+            status=status.HTTP_200_OK,
         )
